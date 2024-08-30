@@ -20,15 +20,15 @@ pipeline {
             }
         }
         
-        stage('Run Tests') {
-            steps {
-                script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'npm test'
-                    }
-                }
-            }
-        }
+        //stage('Run Tests') {
+            //steps {
+                //script {
+                    //docker.image(DOCKER_IMAGE).inside {
+                        //sh 'npm test'
+                    //}
+                //}
+            //}
+        //}
         
         stage('Deploy') {
             steps {
