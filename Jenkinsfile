@@ -33,9 +33,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.image(DOCKER_IMAGE).withRun('-p 1337:1337') { c ->
-                        sh "echo 'Strapi app is running on port 1337'"
-                    }
+                    def containerId = docker.run('-d -p 1337:1337 ' + DOCKER_IMAGE)
+                    echo "Strapi app is running on: http://${HOST}:${PORT}"
+                    docker.stop(containerId)
+                    docker.rm('-f --volumes ' + containerId)
                 }
             }
         }
