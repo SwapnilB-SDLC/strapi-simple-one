@@ -3,6 +3,8 @@ pipeline {
     
     environment {
         DOCKER_IMAGE = 'strapi-app:latest'
+        HOST = 'localhost'
+        PORT = '1337'
     }
     
     stages {
@@ -14,30 +16,14 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build(DOCKER_IMAGE)
-                }
+                sh 'docker build -t ${DOCKER_IMAGE} .'
             }
         }
         
-        //stage('Run Tests') {
-            //steps {
-                //script {
-                    //docker.image(DOCKER_IMAGE).inside {
-                        //sh 'npm test'
-                    //}
-                //}
-            //}
-        //}
-        
         stage('Deploy') {
             steps {
-                script {
-                    def containerId = docker.run('-d -p 1337:1337 ' + DOCKER_IMAGE)
-                    echo "Strapi app is running on: http://${HOST}:${PORT}"
-                    docker.stop(containerId)
-                    docker.rm('-f --volumes ' + containerId)
-                }
+                sh 'docker run -d -p ${PORT}:${PORT} ${DOCKER_IMAGE}'
+                echo "Strapi app is running on: http://${HOST}:${PORT}"
             }
         }
     }
